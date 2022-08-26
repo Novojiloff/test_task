@@ -35,9 +35,3 @@
     name: php-fpm
     state: started
     enabled: true
-
-# - name: Remove default /etc/php-fpm.d/www.conf file
-#   ansible.builtin.file:
-#     path: /etc/php-fpm.d/www.conf
-#     state: absent
-#   notify: restart php-fpm

@@ -1,23 +1,7 @@
 # list of required packages for php
 php_packages_list:
   - php
-  # - gcc
-  # - php-curl
-  # - php-dom
-  # - php-exif
-  # - php-fileinfo
   - php-fpm
-  # - php-gd
-  # - php-hash
-  # - php-devel
-  # - php-pear
-  # - ImageMagick
-  # - ImageMagick-devel
-  # - php-json
-  # - php-mbstring
-  # - php-mysql
-  # - php-xml
-  # - php-zip
 
 # nginx vars
 nginx_tls_port: 443
