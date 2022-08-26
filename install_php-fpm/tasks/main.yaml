@@ -1,0 +1,43 @@
+---
+- name: Put epel.repo to /etc/yum.repos.d/ directory
+  copy:
+    src: files/epel.repo
+    dest: /etc/yum.repos.d/epel.repo
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Put remi-php74.repo to /etc/yum.repos.d/ directory
+  copy:
+    src: files/remi-php74.repo
+    dest: /etc/yum.repos.d/remi-php74.repo
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Put remi-safe.repo to /etc/yum.repos.d/ directory
+  copy:
+    src: files/remi-safe.repo
+    dest: /etc/yum.repos.d/remi-safe.repo
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Install packages from 'php_packages_list'
+  yum:
+    name: "{{ packages }}"
+  loop: "{{ php_packages_list }}"
+  loop_control:
+    loop_var: packages
+
+- name: Start php-fpm Service
+  service:
+    name: php-fpm
+    state: started
+    enabled: true
+
+# - name: Remove default /etc/php-fpm.d/www.conf file
+#   ansible.builtin.file:
+#     path: /etc/php-fpm.d/www.conf
+#     state: absent
+#   notify: restart php-fpm

@@ -1,0 +1,2 @@
+virtual_host1: dev.my.site
+virtual_host2: test.my.site

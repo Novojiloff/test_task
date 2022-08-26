@@ -1,0 +1,11 @@
+# nginx vars
+nginx_port_no_tls: 80
+nginx_port_tls: 443
+
+# virtual hosts
+virtual_host1: dev.my.site
+virtual_host2: test.my.site
+
+# settings for tls
+cert_path: /etc/ssl/certs/{{ ansible_host }}.crt
+privatekey_path: /etc/ssl/private/{{ ansible_host }}.pem

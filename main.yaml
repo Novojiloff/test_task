@@ -1,0 +1,55 @@
+---
+- name: Install and configure nginx and apache
+  hosts: node1
+  gather_facts: true
+  become: false
+
+  tasks:
+    - name: Generate self-signed certificate
+      import_role:
+        name: cert_create
+      become: true
+      tags: 
+        - webserver
+        - tls
+    
+    - name: Install and configure httpd
+      import_role: 
+        name: install_apache
+      become: true
+      tags:
+        - httpd
+        - webserver
+
+    - name: Install and configure nginx
+      import_role:
+        name: install_nginx
+      become: true
+      tags: 
+        - webserver
+        - nginx
+
+    - name: Install and configure php-fpm
+      import_role:
+        name: install_php-fpm
+      become: true
+      tags: 
+        - webserver
+        - php
+        
+    # - name: Install and configure MariaDB
+    #   import_role:
+    #     name: install_mariadb
+    #   become: true
+    #   tags: db
+
+  # post_tasks:
+  # - name: check web site from control server
+  #   uri:
+  #     url: "https://dev.my.site"
+  #     return_content: true
+  #   register: example_webpage_out
+  #   failed_when: example_webpage_out.status != 200
+  #   tags: 
+  #     - webserver
+  #     - check

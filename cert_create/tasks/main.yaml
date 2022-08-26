@@ -1,0 +1,73 @@
+---
+- name: install openssl
+  yum:
+    name: openssl
+    update_cache: true
+    state: present
+
+- name: install python2-cryptography
+  yum:
+    name: python2-cryptography
+    update_cache: true
+    state: present
+  
+- name: Create directory /etc/ssl/private
+  file:
+    path: /etc/ssl/private
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+  
+- name: Create directory /etc/ssl/csr
+  file:
+    path: /etc/ssl/csr
+    state: directory
+    owner: root
+    group: root
+    mode: 0700
+    
+- name: Generate OpenSSL private key
+  community.crypto.openssl_privatekey:
+    path: "/etc/ssl/private/{{ ansible_host }}.pem"
+    size: 2048
+  
+- name: Generate an OpenSSL Certificate Signing Request
+  openssl_csr:
+    path: /etc/ssl/csr/{{ ansible_host }}.csr
+    privatekey_path: /etc/ssl/private/{{ ansible_host }}.pem
+    country_name: "{{ country }}"
+    organization_name: "{{ organization }}"
+    email_address: "{{ email }}"
+    common_name: "{{ site }}"
+
+- name: Generate a self signed certificate
+  openssl_certificate:
+    path: /etc/ssl/certs/{{ ansible_host }}.crt
+    privatekey_path: /etc/ssl/private/{{ ansible_host }}.pem
+    csr_path: /etc/ssl/csr/{{ ansible_host }}.csr
+    provider: selfsigned
+
+- name: Create directory /etc/nginx/snippets
+  file:
+    path: /etc/nginx/snippets
+    state: directory
+    owner: root
+    group: root
+    mode: 0644
+
+- name: copy nginx self-signed conf file
+  template:
+    src: templates/self-signed.conf.j2
+    dest: /etc/nginx/snippets/self-signed.conf
+    owner: root
+    group: root
+    mode: 0644
+
+- name: copy ssl-params file
+  copy:
+    src: ssl_params.conf
+    dest: /etc/nginx/snippets/ssl-params.conf
+    owner: root
+    group: root
+    mode: 0644

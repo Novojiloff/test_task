@@ -1,0 +1,21 @@
+server {
+    listen {{ nginx_port_no_tls }} default_server;
+    root /usr/share/nginx/html;
+    index index.html index.htm;
+    server_name {{ ansible_host }};
+    location / {
+            try_files $uri $uri/ =404;
+    }
+}
+
+server {
+    listen {{ nginx_port_tls }} ssl http2;
+    root /usr/share/nginx/html;
+    server_name {{ ansible_host }};
+    index index.html index.htm;
+    include snippets/self-signed.conf;
+    # include snippets/ssl-params.conf;
+    location / {
+            try_files $uri $uri/ =404;
+    }
+}
